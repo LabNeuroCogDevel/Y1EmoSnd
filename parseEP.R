@@ -9,6 +9,7 @@ library('reshape2')
 
 # how to get date object from datetime column
 astime<-function(x) mdy_hms(as.character(x))
+ms2s <- function(x) as.numeric(as.character(x))/1000
 
 ##
 # parseEP parses the long form output of parseEP.pl
@@ -94,6 +95,14 @@ for(f in args) {
   if( length(d.block) == 0L) next
   #if( ! isgooddf(d.block) ) next
   isgooddf(d.block)
+
+  # fix some weirdness (leadign space, 'AntiTaskEmo FixEnd' on last event
+  d.block$Procedure_note <- gsub('^ *','',d.block$Procedure_note)
+  d.block$Procedure_note <- gsub(' AntiTaskEmo.*','',d.block$Procedure_note)
+  
+  # take time into seconds
+  d.block <- d.block %>% 
+     mutate_at(vars(matches('Onset|Duration')),funs( ms2s) )
 
   outdir <- 'stim/wide'
   if(! dir.exists(outdir) ) dir.create(outdir)
