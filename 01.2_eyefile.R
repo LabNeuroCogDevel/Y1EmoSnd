@@ -18,7 +18,10 @@ readfs <- function(f) {
     fn=basename(f)
     d<-read.xls(f,sheet=2,header=F)%>%mutate(run=fn) 
 
-    if(nrow(d) < 0 || ncol(d) < 10) warning(f, ' has too few rows or columns!')
+    # if we never had an error correct, the last column will never be populated
+    if(nrow(d) == 9) d$errcorlat <- NA
+
+    if(nrow(d) < 0 || ncol(d) != 10) warning(f, ' has too few rows or columns!')
 
     return(d)
 }
