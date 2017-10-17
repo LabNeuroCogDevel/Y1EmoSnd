@@ -6,33 +6,18 @@ library(tidyr)
 options(warn=1) # warn as it happens
 
 
-## read in manually scored eye tracking
-readfs <- function(f) { 
-    fn=basename(f)
-    read.xls(f,sheet=2,header=F)%>%mutate(run=fn) 
-}
-readallfseye<- function(ld) {
-   ld <- gsub('_','/',ld)
-   files <- Sys.glob(sprintf('/Volumes/B/bea_res/Data/Tasks/CogEmoSoundsBasic/%s/Scored/*/fs_*xls',ld))
-   files <- files[!grepl('OLD',files,ignore.case = T)]
-   d <- lapply(files, readfs) %>%
-        bind_rows %>%
-        `names<-`(c('score','lat1','lat2','lat3','valence','score.val','trial','score.ec','lat.ec','run'))
-   return(d)
-}
-
 ## merge score (manual score fs_*xls)  with timing (from 01_parseEP.bash)
 mergeScoreTime <- function(ld) {
    ## get and process score
-   eyed <-  readallfseye(ld)
-   eyed.m <-
-      eyed %>% 
-      select(trial,score.ec,lat1,run) %>%
-      separate(score.ec,c('val','score'),'_') %>%
-      mutate(block=as.numeric(gsub('.*un(\\d).*','\\1',run)))
+   eyefile <- sprintf('stim/score/%s_score.txt',ld) 
+   if(! file.exists(eyefile) ) { warning('missing ',eyefile); return() }
+
+   eyed.m <-  read.table(eyefile,sep="\t",header=T,quote="")
 
    ## get time
    timefile <- sprintf('stim/wide/%s_wide.txt',ld) 
+   if(! file.exists(timefile) ) { warning('missing ',timefile); return() }
+
    d.time <- read.table(timefile,sep="\t",header=T,quote="")
 
    d <- merge(d.time,eyed.m, by=c('trial','block')) %>% arrange(subj,block,trial)

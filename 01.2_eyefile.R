@@ -10,13 +10,17 @@ options(warn=1) # warn as it happens
 
 subjfiles <- function(ld) {
    ld <- gsub('_','/',ld)
-   files <- Sys.glob(sprintf('/Volumes/B/bea_res/Data/Tasks/CogEmoSoundsBasic/%s/Scored/*/fs_*xls',ld))
+   files <- Sys.glob(sprintf('/Volumes/L/bea_res/Data/Tasks/CogEmoSoundsBasic/%s/Scored/*/fs_*xls',ld))
    files <- files[!grepl('OLD',files,ignore.case = T)]
    return(files)
 }
 readfs <- function(f) { 
     fn=basename(f)
-    read.xls(f,sheet=2,header=F)%>%mutate(run=fn) 
+    d<-read.xls(f,sheet=2,header=F)%>%mutate(run=fn) 
+
+    if(nrow(d) < 0 || ncol(d) < 10) warning(f, ' has too few rows or columns!')
+
+    return(d)
 }
 readallfseye<- function(ld) {
    files<-subjfiles(ld)
@@ -41,7 +45,7 @@ cleaneye <- function(ld) {
 
 ## MAIN:
 # find all wide files, and get luna_date from them
-all.ld <- sapply(Sys.glob('/Volumes/B/bea_res/Data/Tasks/CogEmoSoundsBasic/1*/2*/'),function(x) strsplit(x,'/') %>% unlist %>% tail(2) %>% paste0(collapse='_') ) %>% unname
+all.ld <- sapply(Sys.glob('/Volumes/L/bea_res/Data/Tasks/CogEmoSoundsBasic/1*/2*/'),function(x) strsplit(x,'/') %>% unlist %>% tail(2) %>% paste0(collapse='_') ) %>% unname
 
 if(!dir.exists('stim/score')) dir.create('stim/score')
 for (ld in all.ld){
