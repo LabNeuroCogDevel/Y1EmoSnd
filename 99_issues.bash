@@ -32,7 +32,7 @@ check(){
 ls stim/*/*.txt |ldfromfile|sort|uniq | while read ld; do
  
  rawscorepath=/Volumes/L/bea_res/Data/Tasks/CogEmoSoundsBasic/${ld/_/\/}/Scored/
- nrawscore=$(find $rawscorepath -iname 'fs_*run*.xls' 2>/dev/null|wc -l)
+ nrawscore=$(find $rawscorepath -iname 'fs_*run*.xls' -and -not -iname '*OLD*' 2>/dev/null|wc -l)
  [ $nrawscore -ne 4 ] && echo -e "$ld\txls\t$nrawscore!=4 ($rawscorepath)" && continue
 
  sf=stim/score/${ld}_score.txt
