@@ -24,4 +24,11 @@ d %>%
 d %>%
    filter(score=='correct' ) %>% 
    save1D(colname='cue1_OnsetTime', nblocks=4)
-   #file=all_cor.1D
+   #file=cue_cor.1D
+
+### 1d examples
+# only the Neg sounds and error corrected
+d %>%
+  filter(Procedure_note == 'antiNeg', score=='errorCorrected' ) %>% 
+  save1D(colname='SoundOut1_OnsetTime', dur='SoundOut1_Duration',nblocks=4)
+#file=neg_errCor_snd.1D
