@@ -8,8 +8,20 @@ use strict; use warnings;
 #  iconv -f utf16 -t ascii CogEmo4_ER_A_Run1-10370-1.txt | ./parseEP.pl 
 # instead we do unecoding here
 #  use open IN=>':encoding(utf-16)', OUT=> ':encoding(us-ascii)';
+#
+if($#ARGV < 0) {
+ print("USAGE: ./parseEP.pl [TrialEventPart norm string] eprime log file\n");
+ exit(1);
+}
 
-# what events do we care about
+# the event we will normalize times to -- what happens after we recieve scanner trigger
+my $startTrialEventPart = "0ITI10OnsetTime";
+# if we start our list with something this is both not a file and doesn't end with .txt
+# assume we want to change the first event name search string
+$startTrialEventPart = shift @ARGV if($ARGV[0] !~ /\.txt$/i && ! -e $ARGV[0]);
+
+# UNUSED (print_out no longer called) -- currently (21071219 print out everything in file)
+# what events do we care about 
 my @events=qw/Procedure BlockListP ITI ITI9 SoundOut1 Wait2 Wait3 Wait4 Word cue1 gap1 goodx/;
 # what values do we care about
 my @valuekeys=qw/OnsetTime Duration note/;
@@ -52,8 +64,8 @@ sub readep {
         my ($event,$part)=split/\./,$field;
         $part="note" if(!$part);
   
-        # set and normalize by starttime
-        $starttime=$value if("$trial$event$part" eq "0ITI10OnsetTime");
+        # set and normalize by starttime, eg 0ITI10OnsetTime
+        $starttime=$value if("$trial$event$part" eq "$startTrialEventPart");
         $value=$value-$starttime if ($part =~ /OnsetTime/);
   
         $all[$trial]->{$event}->{$part} = $value;

@@ -56,7 +56,7 @@ parseEP <- function(f) {
 #  - 28 trials, 4 blocks, sequentail datetimes
 #
 orwarn  <- function(b,...) { if(!b){warning(...)}; return(b) }
-isgooddf <- function(d.block) {
+isgooddf <- function(d.block,ntrials=28,nblocks=4) {
   if( length(d.block) <= 0L ) {
      warning('empty input')
      return(F)
@@ -69,8 +69,8 @@ isgooddf <- function(d.block) {
   
   sn <- getsavename(d.block)
   good <- 
-   orwarn( all(check$n == 28 )     ,'not all blocks have 28 trials: ',sn) &&
-   orwarn( nrow(check) == 4        ,'not exaclty 4 blocks: ',sn) &&
+   orwarn( all(check$n == ntrials ),'not all blocks have 28 trials: ',sn) &&
+   orwarn( nrow(check) == nblocks  ,'not exaclty 4 blocks: ',sn) &&
    orwarn( all(diff(check$dt)  >0 ),'datetimes are not sequential: ',sn) 
   return(good)
 }
@@ -94,9 +94,17 @@ for(f in args) {
   d.block <- parseEP(f)
   if( length(d.block) == 0L) next
   #if( ! isgooddf(d.block) ) next
-  isgooddf(d.block)
+  if(grepl('stim_sacloc',f)){
+     expectNtrials <- 42
+     expectNblocks <- 1
+  }else{
+     #grepl('stim/',f)
+     expectNtrials <- 28
+     expectNblocks <- 4
+  }
+  isgooddf(d.block,expectNtrials,expectNblocks)
 
-  # fix some weirdness (leadign space, 'AntiTaskEmo FixEnd' on last event
+  # fix some weirdness (leading space, 'AntiTaskEmo FixEnd' on last event
   d.block$Procedure_note <- gsub('^ *','',d.block$Procedure_note)
   d.block$Procedure_note <- gsub(' AntiTaskEmo.*','',d.block$Procedure_note)
   
@@ -104,15 +112,14 @@ for(f in args) {
   d.block <- d.block %>% 
      mutate_at(vars(matches('Onset|Duration')),funs( ms2s) )
 
-  outdir <- 'stim/wide'
+  # 'stim/wide'
+  outdir <- gsub('long','wide',dirname(f))
   if(! dir.exists(outdir) ) dir.create(outdir)
   outputname <- getsavename(d.block)
   outfile=file.path(outdir,outputname)
 
   write.table(d.block,file=outfile,row.names=F,quote=F,sep="\t")
+  print(outfile)
 }
 
 warnings()
-
-
-
