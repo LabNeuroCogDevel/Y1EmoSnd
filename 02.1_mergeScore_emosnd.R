@@ -4,29 +4,16 @@ library(LNCDR)
 library(gdata) # read xls (not xlsx)
 library(tidyr)
 options(warn=1) # warn as it happens
+source('readscores.R')
 
 
-## merge score (manual score fs_*xls)  with timing (from 01_parseEP.bash)
-mergeScoreTime <- function(ld) {
-   ## get and process score
-   eyefile <- sprintf('stim/score/%s_score.txt',ld) 
-   if(! file.exists(eyefile) ) { warning('missing ',eyefile); return() }
-
-   eyed.m <-  read.table(eyefile,sep="\t",header=T,quote="")
-
-   ## get time
-   timefile <- sprintf('stim/wide/%s_wide.txt',ld) 
-   if(! file.exists(timefile) ) { warning('missing ',timefile); return() }
-
-   d.time <- read.table(timefile,sep="\t",header=T,quote="")
-
-   d <- merge(d.time,eyed.m, by=c('trial','block')) %>% arrange(subj,block,trial)
-   return(d)
-}
 
 ## MAIN:
 # find all wide files, and get luna_date from them
 all.ld <- sapply(Sys.glob('stim/wide/*_wide.txt'),function(x) gsub('_wide.txt','',basename(x) )) %>% unname
+
+stimdir="stim"
+outdir="stim/wide_score"
 
 # failing
 # 10893_20111111
