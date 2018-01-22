@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 set -e
 trap 'e=$?; [ $e -ne 0 ] && echo "$0 exited in error"' EXIT
+
 #
 # combine perl and R code for each subject 
 # to generate stim files in long and then wide format

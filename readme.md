@@ -13,3 +13,9 @@ see also
 d <- read.table('/Volumes/Zeus/MMY1_EmoSnd/scripts/timing/stim/wide_score/10370_20120918_score.txt',sep="\t",header=T,quote="")
 d$ITI9_OnsetTime
 ```
+
+# Multimodal Year 1 Saccade Localizer
+## 20171221 
+`starttrialeventpart=0fixation1OnsetTime` -- unvarified start time
+output in `stim_sacloc/`, reuse `parseEP.*` and `readscores.R` (updated to support different stim folders)
+
