@@ -22,7 +22,7 @@ $startTrialEventPart = shift @ARGV if($ARGV[0] !~ /\.txt$/i && ! -e $ARGV[0]);
 
 # UNUSED (print_out no longer called) -- currently (21071219 print out everything in file)
 # what events do we care about 
-my @events=qw/Procedure BlockListP ITI ITI9 SoundOut1 Wait2 Wait3 Wait4 Word cue1 gap1 goodx/;
+my @events=qw/Procedure BlockListP ITI ITI9 SoundOut1 Wait2 Wait3 Wait4 Word cue1 gap1 goodx SoundStim/;
 # what values do we care about
 my @valuekeys=qw/OnsetTime Duration note/;
 
@@ -57,7 +57,7 @@ sub readep {
     if($level==3 && /LogFrame Start/){++$trial}; 
   
     # line matches info we care about
-    if(/\.OnsetTime|Procedure|BlockListP.Sample|Word|Duration:/){
+    if(/\.OnsetTime|Procedure|BlockListP.Sample|Word|SoundStim|Duration:/){
         # parse line
         s/^\W*//;s/.Sample//; 
         my ($field,$value)=split(/:/);

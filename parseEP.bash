@@ -38,7 +38,7 @@ dirToLong(){
 
      # starttrialeventpart can be empyt, will default to emosnd task start
      # otherwise will use eg "0fixation1OnsetTime" (trial 0's fixation1's onsetettime) to normalzie times
-     find $d -iname "$EPfilename" | xargs ./parseEP.pl $starttrialeventpart > $outfile
+     find $d -iname "$EPfilename" -and -not -iname '*unix.txt' | xargs ./parseEP.pl $starttrialeventpart > $outfile
 }
 
 all_parseEP(){
