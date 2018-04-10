@@ -7,10 +7,10 @@ args <- commandArgs(trailingOnly = TRUE)
 #args[2]=luna id
 
 #setwd('Z:/MMY1_EmoSnd/scripts/timing/stim/wide_score')
-setwd('/Volumes/Zeus/MMY1_EmoSnd/scripts/timing/stim/wide_score')
+setwd("/Volumes/Zeus/MMY1_EmoSnd/scripts/timing/stim/wide_score")
 
 ## read in data (one visit)
-d<- read.table(args[1],sep="\t",quote="",header=T)
+d<- read.table(args[1], sep="\t", quote="", header=T)
 #nblocks=number of runs!!
 
 #score: correct errorCorrected drop error
@@ -18,59 +18,61 @@ d<- read.table(args[1],sep="\t",quote="",header=T)
 #First: separated just by accuracy
 #
 #setwd(paste("Z:/MMY1_EmoSnd/scripts/timing/stim/stimtimes/", args[2], sep=""))
-setwd(paste('/Volumes/Zeus/MMY1_EmoSnd/scripts/timing/stim/stimtimes/', args[2], sep=""))
+setwd(paste("/Volumes/Zeus/MMY1_EmoSnd/scripts/timing/stim/stimtimes/", args[2], sep=""))
 #All correct
 d %>%
-  filter(score=='correct' ) %>% 
-  save1D(colname='SoundOut1_OnsetTime', nblocks=4, fname=(paste(args[2], "_all_cor.1D", sep="")))
+  filter(score=="correct" ) %>%
+  save1D(colname="SoundOut1_OnsetTime", nblocks=4,
+         fname=paste(args[2], "_all_cor.1D", sep=""))
 #
 #All Error Corrected
 d %>%
-  filter(score=='errorCorrected' ) %>% 
-  save1D(colname='SoundOut1_OnsetTime', nblocks=4, fname=(paste(args[2], "_all_errCor.1D", sep="")))
+  filter(score=="errorCorrected" ) %>%
+  save1D(colname="SoundOut1_OnsetTime", nblocks=4,
+         fname=paste(args[2], "_all_errCor.1D", sep=""))
 #
 #All error (uncorrected)
 d %>%
-  filter(score=='error' ) %>% 
-  save1D(colname='SoundOut1_OnsetTime', nblocks=4, fname=(paste(args[2], '_all_err.1D', sep="")))
+  filter(score=="error" ) %>% 
+  save1D(colname="SoundOut1_OnsetTime", nblocks=4, fname=(paste(args[2], '_all_err.1D', sep="")))
 #
 #
 #Now just by condition
 #All positive
 d %>%
-  filter(Procedure_note=='antiPos', score != "drop" ) %>% 
-  save1D(colname='SoundOut1_OnsetTime', nblocks=4, fname=(paste(args[2], "_all_pos.1D", sep="")))
+  filter(Procedure_note=="antiPos", score != "drop" ) %>% 
+  save1D(colname="SoundOut1_OnsetTime", nblocks=4, fname=(paste(args[2], "_all_pos.1D", sep="")))
 #
 #All negative
 d %>%
-  filter(Procedure_note=='antiNeg', score != "drop" ) %>% 
-  save1D(colname='SoundOut1_OnsetTime', nblocks=4, fname=(paste(args[2], "_all_neg.1D", sep="")))
+  filter(Procedure_note=="antiNeg", score != "drop" ) %>% 
+  save1D(colname="SoundOut1_OnsetTime", nblocks=4, fname=(paste(args[2], "_all_neg.1D", sep="")))
 #
 #All neutral
 d %>%
-  filter(Procedure_note=='antiNeu', score != "drop" ) %>% 
-  save1D(colname='SoundOut1_OnsetTime', nblocks=4, fname=(paste(args[2], "_all_neu.1D", sep="")))
+  filter(Procedure_note=="antiNeu", score != "drop" ) %>% 
+  save1D(colname="SoundOut1_OnsetTime", nblocks=4, fname=(paste(args[2], "_all_neu.1D", sep="")))
 #
 #All silence
 d %>%
-  filter(Procedure_note=='antiSil', score != "drop" ) %>% 
-  save1D(colname='SoundOut1_OnsetTime', nblocks=4, fname=(paste(args[2], "_all_sil.1D", sep="")))
+  filter(Procedure_note=="antiSil", score != "drop" ) %>% 
+  save1D(colname="SoundOut1_OnsetTime", nblocks=4, fname=(paste(args[2], "_all_sil.1D", sep="")))
 #
 #Now condition AND score
 #Positive, correct only
 d %>%
-  filter(Procedure_note=='antiPos', score=='correct' ) %>% 
-  save1D(colname='SoundOut1_OnsetTime', nblocks=4, fname=(paste(args[2], "_pos_cor.1D", sep="")))
+  filter(Procedure_note=="antiPos", score=="correct" ) %>% 
+  save1D(colname="SoundOut1_OnsetTime", nblocks=4, fname=(paste(args[2], "_pos_cor.1D", sep="")))
 #
 #Positive, error corrected only
 d %>%
-  filter(Procedure_note=='antiPos', score=='errorCorrected' ) %>% 
-  save1D(colname='SoundOut1_OnsetTime', nblocks=4, fname=(paste(args[2], "_pos_errCor.1D", sep="")))
+  filter(Procedure_note=="antiPos", score=="errorCorrected" ) %>% 
+  save1D(colname="SoundOut1_OnsetTime", nblocks=4, fname=(paste(args[2], "_pos_errCor.1D", sep="")))
 #
 #Positive, correct + error corrected
 d %>%
-  filter(Procedure_note=='antiPos', score %in% c("errorCorrected", "correct")) %>% 
-  save1D(colname='SoundOut1_OnsetTime', nblocks=4, fname=(paste(args[2], "_pos_cor_errCor.1D", sep="")))
+  filter(Procedure_note=="antiPos", score %in% c("errorCorrected", "correct")) %>% 
+  save1D(colname="SoundOut1_OnsetTime", nblocks=4, fname=paste(args[2], "_pos_cor_errCor.1D", sep=""))
 #
 #Positive, error only
 d %>%
