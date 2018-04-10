@@ -94,7 +94,7 @@ getallscores <- function(all.ld,stimdir,taskdir,nruns,scorefunc=cleaneye) {
   for (ld in all.ld){
     outfile<-sprintf('%s/%s_score.txt',outdir,ld)
     if(file.exists(outfile)) next
-    m<-tryCatch(scorefunc(ld,taskdir,nruns),error=function(e){warning(ld,e);return()})
+    m<-tryCatch(scorefunc(ld,taskdir,nruns),error=function(e){warning(ld,e,'args: ',paste(sep=", ",taskdir,nruns,stimdir));return()})
     if(length(m)<2L) {warning(ld,' failed');next}
     write.table(m,outfile,row.names=F,quote=F,sep="\t")
   }
