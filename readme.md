@@ -15,7 +15,13 @@ d$ITI9_OnsetTime
 ```
 
 # Multimodal Year 1 Saccade Localizer
+## score eyetracking
+```
+ssh arnold
+cd ~/src/autoeyescor
+./runme.bash -t sacloc
+```
 ## 20171221 
-`starttrialeventpart=0fixation1OnsetTime` -- unvarified start time
+`starttrialeventpart=0fixation1OnsetTime` -- unverified start time
 output in `stim_sacloc/`, reuse `parseEP.*` and `readscores.R` (updated to support different stim folders)
 
