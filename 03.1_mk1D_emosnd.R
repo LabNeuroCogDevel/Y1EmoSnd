@@ -18,7 +18,11 @@ d<- read.table(args[1], sep="\t", quote="", header=T)
 #First: separated just by accuracy
 #
 #setwd(paste("Z:/MMY1_EmoSnd/scripts/timing/stim/stimtimes/", args[2], sep=""))
-setwd(paste("/Volumes/Zeus/MMY1_EmoSnd/scripts/timing/stim/stimtimes/", args[2], sep=""))
+
+subjdir <- paste0("/Volumes/Zeus/MMY1_EmoSnd/scripts/timing/stim/stimtimes/", args[2])
+if (!dir.exists(subjdir)) dir.create(subjdir)
+
+setwd(subjdir)
 #All correct
 d %>%
   filter(score=="correct" ) %>%
