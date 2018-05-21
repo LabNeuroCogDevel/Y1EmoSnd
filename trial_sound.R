@@ -8,16 +8,24 @@ library(dplyr)
 
 ## get datasets
 
+# fix some sound names
+fixsnd <- function(d) d %>% mutate(Sound=gsub(" ", "", Sound),
+                                   Sound=gsub("sarahordaz", "daz", Sound),
+                                   Sound=gsub("screaming", "scream", Sound))
 # add lunaid as id to ars_val txt files
 readsnd <- function(x) {
    id <- basename(x) %>% gsub(".txt", "", .)
    read.table(x) %>%
-   mutate(id=id)
+   mutate(id=id) %>%
+   group_by(Sound, id) %>%
+   summarise_all(first) %>%
+   ungroup
 }
 # rbind all ars_vals together (with id in dataframe)
 snd <- Sys.glob("stim/ars_val/*.txt") %>%
       lapply(readsnd) %>%
-      bind_rows
+      bind_rows %>%
+      fixsnd
 
 # dont die if one of these doesn't read in
 readwide <- function(x, ...){
@@ -30,7 +38,7 @@ wide <-
    bind_rows %>%
    select(trial, block, subj,
           datetime, val, score, lat=lat1, Sound=SoundStim_note) %>%
-   mutate(Sound=gsub(" ", "", Sound))
+   fixsnd
 
 
 # get age and sex for all mulitmodal
@@ -57,6 +65,12 @@ wide_age_snd <-
    merge(wide, by.x="id", by.y="subj", all.y=T) %>%
    merge(snd, by=c("id", "Sound"), all=T) %>%
    arrange(id, block, trial)
+
+
+# Snd Name repeated, see
+# wide %>% filter(subj=="11047",trial=="13",block==4)
+# snd %>% filter(id==11047,Sound=="277.wav")
+# -- fixed in snd (with group_by %>% summarise_all(first) )
 
 write.csv(wide_age_snd, "../trial_lat_valence.csv")
 # merge valence and arrousal
